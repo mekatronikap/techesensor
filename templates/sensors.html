@@ -1,0 +1,46 @@
+{% include "layout.html" %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <h2>Oil Sensors</h2>
+        </div>
+        <div class="col-md-auto">
+            <a href="add-sensor" class="btn btn-dark btn-sm" role="button">Add Sensor</a>
+        </div>
+    </div>
+    <table class="table table-hover mt-4">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Desc.</th>
+            <th scope="col">Site</th>
+            <th scope="col">Machine</th>
+            <th scope="col">Compartment</th>
+            <th scope="col">Type</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sensor in sensors %}
+            <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/sensors/{{ sensor.id }}';">
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ sensor.description }}</td>
+                <td>{{ sensor.site }}</td>
+                <td>{{ sensor.equipment }}</td>
+                <td>{{ sensor.compartment }}</td>
+                <td>{{ sensor.type }}</td>
+                <td>
+                    <a class="icon-link" href="#">
+                        <i class="bi-pen"></i>
+                    </a>
+                    &nbsp;|&nbsp;
+                    <a class="icon-link" href="#">
+                        <i class="bi-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

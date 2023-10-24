@@ -1,0 +1,16 @@
+{% include "layout.html" %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <h2>{{ sensor.description }}</h2>
+        </div>
+        <div class="col-md-auto">
+            <a href="/sensors" class="btn btn-dark btn-sm" role="button">All Sensors</a>
+        </div>
+    </div>
+    Type: {{ sensor.type }}, at site {{ sensor.site }} on {{ sensor.equipment }} {{ sensor.compartment }}
+    <div class="mt-4">
+        <h3>Sensor Values</h3>
+    </div>
+</div>
