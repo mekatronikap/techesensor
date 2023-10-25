@@ -79,3 +79,27 @@ async def delete_sensor(request: Request, sensor_id: int, db: Session = Depends(
     db.commit()
     return RedirectResponse(url='/sensors', status_code=status.HTTP_302_FOUND)
 
+
+@router.get("/edit/{sensor_id}", response_class=HTMLResponse)
+async def edit_sensor(request: Request, sensor_id: int, db: Session = Depends(get_db)):
+    sensor = db.query(models.Sensors).filter(models.Sensors.id == sensor_id).first()
+    return templates.TemplateResponse("edit-sensor.html", {"request": request, "sensor": sensor})
+
+
+@router.post("/edit/{sensor_id}", response_class=HTMLResponse)
+async def edit_sensor_commit(request: Request, sensor_id: int, db: Session = Depends(get_db), description: str = Form(...),
+                        type: str = Form(...), site: str = Form(...),
+                        equipment: str = Form(...), compartment: str = Form(...)):
+    # todo auth
+    sensor_model = db.query(models.Sensors).filter(models.Sensors.id == sensor_id).first()
+    sensor_model.description = description
+    sensor_model.type = type
+    sensor_model.site = site
+    sensor_model.equipment = equipment
+    sensor_model.compartment = compartment
+    sensor_model.owner_id = 1
+
+    db.add(sensor_model)
+    db.commit()
+
+    return RedirectResponse(url="/sensors", status_code=status.HTTP_302_FOUND)

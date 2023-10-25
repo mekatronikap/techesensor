@@ -1,0 +1,86 @@
+{% include "layout.html" %}
+
+<div class="container mt-5">
+
+    <h2>Edit Sensor</h2>
+    <div class="row mt-2">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-group mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" name="description"
+                                   value="{{ sensor.description }}">
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="site" class="form-label">Site</label>
+                                    <input type="text" class="form-control" id="site" name="site"
+                                           value="{{ sensor.site }}">
+                                </div>
+                                <div class="col">
+                                    <label for="equipment" class="form-label">Equipment ID</label>
+                                    <input type="text" class="form-control" id="equipment" name="equipment"
+                                           value="{{ sensor.equipment }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="type" class="form-label">Sensor Type</label>
+                            <select class="form-select" aria-label="Default select example" id="type" name="type">
+                                <option {% if sensor.type == "debris" %} selected="selected" {% endif %} value="debris">
+                                    Wear/Debris
+                                </option>
+                                <option {% if sensor.type == "viscosity" %} selected="selected" {% endif %}
+                                                                            value="viscosity">
+                                    Viscosity
+                                </option>
+                                <option {% if sensor.type == "condition" %} selected="selected" {% endif %}
+                                                                            value="condition">
+                                    Condition
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="compartment" class="form-label">Compartment</label>
+                            <select class="form-select" aria-label="Default select example" name="compartment">
+                                <option {% if sensor.compartment == "engine" %} selected="selected" {% endif %}
+                                                                                value="engine">
+                                    Engine
+                                </option>
+                                <option {% if sensor.compartment == "transmission" %} selected="selected" {% endif %}
+                                                                                      value="transmission">Transmission
+                                </option>
+                                <option {% if sensor.compartment == "gearbox" %} selected="selected" {% endif %}
+                                                                                 value="gearbox">Gearbox
+                                </option>
+                                <option {% if sensor.compartment == "final drive" %} selected="selected" {% endif %}
+                                                                                     value="final drive">Final Drive
+                                </option>
+                                <option {% if sensor.compartment == "motor" %} selected="selected" {% endif %}
+                                                                               value="motor">
+                                    Drive Motor
+                                </option>
+                                <option {% if sensor.compartment == "hydraulic" %} selected="selected" {% endif %}
+                                                                                   value="hydraulic">Hydraulics
+                                </option>
+                                <option {% if sensor.compartment == "others" %} selected="selected" {% endif %}
+                                                                                value="others">
+                                    Others
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3 mt-4">
+                            <button class="btn btn-dark">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+</div>
