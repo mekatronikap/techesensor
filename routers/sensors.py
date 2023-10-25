@@ -65,3 +65,17 @@ async def read_sensor(request: Request, sensor_id: int, db: Session = Depends(ge
     # Todo auth
     sensor = db.query(models.Sensors).filter(models.Sensors.id == sensor_id).first()
     return templates.TemplateResponse("sensor.html", {"request": request, "sensor": sensor})
+
+
+@router.get("/delete/{sensor_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_sensor(request: Request, sensor_id: int, db: Session = Depends(get_db)):
+    # todo auth
+    sensor_model = db.query(models.Sensors).filter(models.Sensors.id == sensor_id).first()
+
+    if sensor_model is None:
+        return RedirectResponse(url="/todos", status_code=status.HTTP_302_FOUND)
+
+    db.query(models.Sensors).filter(models.Sensors.id == sensor_id).delete()
+    db.commit()
+    return RedirectResponse(url='/sensors', status_code=status.HTTP_302_FOUND)
+
