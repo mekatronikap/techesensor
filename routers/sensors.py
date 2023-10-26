@@ -67,6 +67,11 @@ async def read_sensor(request: Request, sensor_id: int, db: Session = Depends(ge
     return templates.TemplateResponse("sensor.html", {"request": request, "sensor": sensor})
 
 
+@router.get("/confirm-delete/{sensor_id}", status_code=status.HTTP_200_OK)
+async def confirm_delete_sensor(request: Request, sensor_id: int):
+    return templates.TemplateResponse("delete-sensor.html", {"request": request, "sensor_id": sensor_id})
+
+
 @router.get("/delete/{sensor_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_sensor(request: Request, sensor_id: int, db: Session = Depends(get_db)):
     # todo auth

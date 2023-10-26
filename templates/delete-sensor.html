@@ -1,0 +1,30 @@
+{% include "layout.html" %}
+<div class="d-flex min-vh-100">
+    <div class="container align-self-center">
+
+        <div class="row justify-content-center">
+
+            <div class="col-12 col-lg-8 col-xl-6 text-center">
+
+                <div class="lc-block mb-2">
+                    <img class="img-fluid w-50 rounded" alt="Sensor"
+                         src="{{ url_for('static', path='images/sensorIntro.jpeg') }}">
+                </div>
+                <div class="lc-block mb-4">
+                    <div editable="rich">
+
+                        <h2>Are you sure want to delete sensor?</h2>
+
+                        <p>Once you confirm your sensor will be deleted along with all recorded data values. Deleted
+                        data can not be retrieved.</p>
+                    </div>
+                </div>
+                <div class="lc-block">
+                    <a class="btn btn-danger" href="/sensors/delete/{{ sensor_id }}" role="button">Yes. Delete now!</a>
+                    <a class="btn btn-primary" href="/sensors" role="button">Cancel</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
