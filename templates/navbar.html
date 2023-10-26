@@ -10,16 +10,22 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/sensors">Sensors</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                </li>
             </ul>
-            <form class="d-flex">
-                <button class="btn btn-outline-success" type="submit">Login</button>
-            </form>
+            {% if user %}
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">{{ user.username.title() }}</a>
+                    </li>
+                </ul>
+            {% endif %}
+            &nbsp;
+            <div class="d-flex">
+                {% if user %}
+                    <a href="/auth/logout" class="btn btn-outline-success" type="submit">Logout</a>
+                {% else %}
+                    <a href="/auth" class="btn btn-outline-success" type="submit">Login</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </nav>

@@ -8,6 +8,7 @@ from starlette import status
 
 import models
 from database import SessionLocal
+from routers.auth import get_current_user
 
 sys.path.append("..")
 
@@ -31,28 +32,38 @@ def get_db():
 
 @router.get("/", response_class=HTMLResponse)
 async def read_all_sensors(request: Request, db: Session = Depends(get_db)):
-    # todos auth
-    sensors = db.query(models.Sensors).all()
-    return templates.TemplateResponse("sensors.html", {"request": request, "sensors": sensors})
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse("/auth", status_code=status.HTTP_302_FOUND)
+
+    sensors = db.query(models.Sensors).filter(models.Sensors.owner_id == user.get("id")).all()
+    return templates.TemplateResponse("sensors.html", {"request": request, "sensors": sensors, "user": user})
 
 
 @router.get("/add-sensor", response_class=HTMLResponse)
 async def add_sensor(request: Request):
-    return templates.TemplateResponse("new-sensor.html", {"request": request})
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse("/auth", status_code=status.HTTP_302_FOUND)
+
+    return templates.TemplateResponse("new-sensor.html", {"request": request, "user": user})
 
 
 @router.post("/add-sensor", response_class=HTMLResponse)
 async def create_sensor(request: Request, db: Session = Depends(get_db), description: str = Form(...),
                         type: str = Form(...), site: str = Form(...),
                         equipment: str = Form(...), compartment: str = Form(...)):
-    #   todos authentication
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse("/auth", status_code=status.HTTP_302_FOUND)
+
     sensor_model = models.Sensors()
     sensor_model.description = description
     sensor_model.type = type
     sensor_model.site = site
     sensor_model.equipment = equipment
     sensor_model.compartment = compartment
-    sensor_model.owner_id = 1
+    sensor_model.owner_id = user.get("id")
 
     db.add(sensor_model)
     db.commit()
@@ -62,19 +73,30 @@ async def create_sensor(request: Request, db: Session = Depends(get_db), descrip
 
 @router.get("/{sensor_id}", response_class=HTMLResponse)
 async def read_sensor(request: Request, sensor_id: int, db: Session = Depends(get_db)):
-    # Todo auth
-    sensor = db.query(models.Sensors).filter(models.Sensors.id == sensor_id).first()
-    return templates.TemplateResponse("sensor.html", {"request": request, "sensor": sensor})
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse("/auth", status_code=status.HTTP_302_FOUND)
+
+    sensor = db.query(models.Sensors).filter(models.Sensors.id == sensor_id).\
+        filter(models.Sensors.owner_id == user.get("id")).first()
+    return templates.TemplateResponse("sensor.html", {"request": request, "sensor": sensor, "user": user})
 
 
 @router.get("/confirm-delete/{sensor_id}", status_code=status.HTTP_200_OK)
 async def confirm_delete_sensor(request: Request, sensor_id: int):
-    return templates.TemplateResponse("delete-sensor.html", {"request": request, "sensor_id": sensor_id})
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse("/auth", status_code=status.HTTP_302_FOUND)
+
+    return templates.TemplateResponse("delete-sensor.html", {"request": request, "sensor_id": sensor_id, "user": user})
 
 
 @router.get("/delete/{sensor_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_sensor(request: Request, sensor_id: int, db: Session = Depends(get_db)):
-    # todo auth
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse("/auth", status_code=status.HTTP_302_FOUND)
+
     sensor_model = db.query(models.Sensors).filter(models.Sensors.id == sensor_id).first()
 
     if sensor_model is None:
@@ -87,15 +109,20 @@ async def delete_sensor(request: Request, sensor_id: int, db: Session = Depends(
 
 @router.get("/edit/{sensor_id}", response_class=HTMLResponse)
 async def edit_sensor(request: Request, sensor_id: int, db: Session = Depends(get_db)):
+    user = await get_current_user(request)
+    if user is None:
+        return RedirectResponse("/auth", status_code=status.HTTP_302_FOUND)
+
     sensor = db.query(models.Sensors).filter(models.Sensors.id == sensor_id).first()
-    return templates.TemplateResponse("edit-sensor.html", {"request": request, "sensor": sensor})
+    return templates.TemplateResponse("edit-sensor.html", {"request": request, "sensor": sensor, "user": user})
 
 
 @router.post("/edit/{sensor_id}", response_class=HTMLResponse)
 async def edit_sensor_commit(request: Request, sensor_id: int, db: Session = Depends(get_db), description: str = Form(...),
                         type: str = Form(...), site: str = Form(...),
                         equipment: str = Form(...), compartment: str = Form(...)):
-    # todo auth
+    user = get_current_user(request)
+
     sensor_model = db.query(models.Sensors).filter(models.Sensors.id == sensor_id).first()
     sensor_model.description = description
     sensor_model.type = type
