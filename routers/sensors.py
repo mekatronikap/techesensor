@@ -89,7 +89,9 @@ async def read_sensor(request: Request, sensor_id: int, db: Session = Depends(ge
     if sensor is None:
         return RedirectResponse(url="/sensors", status_code=status.HTTP_302_FOUND)
 
-    return templates.TemplateResponse("sensor.html", {"request": request, "sensor": sensor, "user": user})
+    values = db.query(models.Values).filter(models.Values.sensor_id == sensor_id).all()
+    return templates.TemplateResponse("sensor.html", {"request": request, "sensor": sensor, "user": user,
+                                                      "values": values})
 
 
 @router.get("/confirm-delete/{sensor_id}", status_code=status.HTTP_302_FOUND)

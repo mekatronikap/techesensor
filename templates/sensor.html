@@ -12,5 +12,33 @@
     Type: {{ sensor.type }}, at site {{ sensor.site }} on {{ sensor.equipment }} {{ sensor.compartment }}
     <div class="mt-4">
         <h3>Sensor Values</h3>
+        <div class="row">
+            <div class="col">
+                <div class="card mt-2 shadow">
+                    <div class="card-body">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Time Stamp</th>
+                                <th scope="col">Debris</th>
+                                <th scope="col">Temperature</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for value in values %}
+                                <tr>
+                                    <td>{{ value.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                    <td>{{ value.debris }}</td>
+                                    <td>{{ value.temperature }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col"></div>
+        </div>
+
     </div>
 </div>
