@@ -113,6 +113,9 @@ async def logout(request: Request):
 
 @router.get('/register', response_class=HTMLResponse)
 async def register(request: Request):
+    user = await get_current_user(request)
+    if user:
+        return RedirectResponse("/auth", status_code=status.HTTP_302_FOUND)
     return templates.TemplateResponse("register.html", {"request": request})
 
 
@@ -145,6 +148,9 @@ async def register_user(request: Request, email: str = Form(...), username: str 
 
 @router.get('/', response_class=HTMLResponse)
 async def authentication_page(request: Request):
+    user = await get_current_user(request)
+    if user:
+        return RedirectResponse("/", status_code=status.HTTP_302_FOUND)
     return templates.TemplateResponse("login.html", {"request": request})
 
 
