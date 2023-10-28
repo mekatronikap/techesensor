@@ -47,10 +47,14 @@ class TokenData(BaseModel):
 
 
 class User(BaseModel):
+    id: int
     username: str
     email: str | None = None
     company: str | None = None
     role: str | None = None
+
+
+class UserInDB(User):
     hashed_password: str
 
 
