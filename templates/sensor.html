@@ -13,7 +13,7 @@
     <div class="mt-4">
         <h3>Sensor Values</h3>
         <div class="row mt-2">
-            <div class="col-md-6">
+            <div class="col-md-5 mb-3">
                 <div class="card shadow">
                     <div class="card-body">
                         <table class="table table-sm table-hover">
@@ -37,46 +37,79 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <canvas id="myChart"></canvas>
+            <div class="col-md-7">
+                <div class="row gy-3">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <canvas id="debrisLine"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <canvas id="tempLine"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
+
                 {% block javascript %}
-                <script>
-                    let debs = JSON.parse({{ debs | tojson }})
-                    let temps = JSON.parse({{ temps | tojson }})
-                    let ts = JSON.parse({{ ts | tojson }})
+                    <script>
+                        let debs = JSON.parse({{ debs | tojson }})
+                        let temps = JSON.parse({{ temps | tojson }})
+                        let ts = JSON.parse({{ ts | tojson }})
 
-                    const ctx = document.getElementById('myChart');
+                        const ctxDeb = document.getElementById('debrisLine');
+                        const ctxTemp = document.getElementById('tempLine');
 
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: ts,
-                            datasets: [{
-                                label: 'Debris',
-                                data: debs,
-                                borderWidth: 1
+                        new Chart(ctxDeb, {
+                            type: 'line',
+                            data: {
+                                labels: ts,
+                                datasets: [{
+                                    label: 'Debris',
+                                    data: debs,
+                                    borderWidth: 1,
+                                    borderColor: '#36A2EB',
+                                    backgroundColor: '#9BD0F5',
+                                }]
                             },
-                                {
-                                    label: 'Temperature',
-                                    data: temps,
-                                    borderWidth: 1
-                                }
-                            ]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
+                            options: {
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
                                 }
                             }
-                        }
-                    });
-                </script>
+                        });
+
+                        new Chart(ctxTemp, {
+                            type: 'line',
+                            data: {
+                                labels: ts,
+                                datasets: [{
+                                    label: 'Temperature',
+                                    data: temps,
+                                    borderWidth: 1,
+                                    borderColor: '#FF6384',
+                                    backgroundColor: '#FFB1C1',
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    </script>
                 {% endblock %}
             </div>
         </div>
