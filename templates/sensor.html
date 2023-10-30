@@ -13,7 +13,7 @@
     <div class="mt-4">
         <h3>Sensor Values</h3>
         <div class="row">
-            <div class="col">
+            <div class="col-md-6">
                 <div class="card mt-2 shadow">
                     <div class="card-body">
                         <table class="table table-sm table-hover">
@@ -37,7 +37,34 @@
                     </div>
                 </div>
             </div>
-            <div class="col"></div>
+            <div class="col-md-6">
+                <div>
+                    <canvas id="myChart"></canvas>
+                </div>
+                <script>
+                    const ctx = document.getElementById('myChart');
+
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                            datasets: [{
+                                label: '# of Votes',
+                                data: [12, 19, 3, 5, 2, 3],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
         </div>
 
     </div>
