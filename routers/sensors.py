@@ -1,4 +1,5 @@
 import sys
+import json
 from fastapi import APIRouter, Request, Form, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
@@ -90,8 +91,18 @@ async def read_sensor(request: Request, sensor_id: int, db: Session = Depends(ge
         return RedirectResponse(url="/sensors", status_code=status.HTTP_302_FOUND)
 
     values = db.query(models.Values).filter(models.Values.sensor_id == sensor_id).all()
+    temps = []
+    debs = []
+    ts = []
+
+    for value in values:
+        temps.append(value.temperature)
+        debs.append(value.debris)
+        ts.append(value.timestamp.strftime('%m-%d %H:%M'))
+
     return templates.TemplateResponse("sensor.html", {"request": request, "sensor": sensor, "user": user,
-                                                      "values": values})
+                                                      "values": values, "temps": json.dumps(temps),
+                                                      "debs": json.dumps(debs), "ts": json.dumps(ts)})
 
 
 @router.get("/confirm-delete/{sensor_id}", status_code=status.HTTP_302_FOUND)
