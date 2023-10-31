@@ -36,7 +36,6 @@ class ValueRequest(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    user = await get_current_user(request)
     return templates.TemplateResponse("home.html", {"request": request, "user": user})
 
 
