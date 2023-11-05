@@ -70,7 +70,6 @@ async def send_value(request: Request, value_request: ValueRequest, username: st
 @router.post("/sensors/{sensor_id}", status_code=status.HTTP_201_CREATED)
 async def post_value(request: Request, value_request: ValueRequest, sensor_id: int,
                      user: user_dependency, db: db_dependency):
-
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
