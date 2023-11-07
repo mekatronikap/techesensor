@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, TIMESTAMP
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, TIMESTAMP, DateTime
 import datetime
 
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from database import Base
 
@@ -39,7 +40,7 @@ class Values(Base):
     __tablename__ = 'wear_values'
 
     id = Column(Integer, primary_key=True)
-    timestamp = Column(TIMESTAMP, default=datetime.datetime.utcnow())
+    timestamp = Column(TIMESTAMP, default=datetime.datetime.utcnow)
     temperature = Column(Integer)
     debris = Column(Integer)
     sensor_id = Column(Integer, ForeignKey('sensors.id'))

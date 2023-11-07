@@ -9,7 +9,7 @@ from database import SessionLocal
 from typing import Annotated
 from sqlalchemy.orm import Session
 from models import Sensors, Values
-from routers.auth_api import get_current_user, get_user
+from routers.auth_api import get_user, get_current_user
 
 
 api_keys = [
@@ -67,22 +67,22 @@ async def send_value(request: Request, value_request: ValueRequest, username: st
     db.commit()
 
 
-@router.post("/sensors/{sensor_id}", status_code=status.HTTP_201_CREATED)
-async def post_value(request: Request, value_request: ValueRequest, sensor_id: int,
-                     user: user_dependency, db: db_dependency):
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-
-    sensor = db.query(models.Sensors).filter(models.Sensors.id == sensor_id) \
-        .filter(models.Sensors.owner_id == user.id).first()
-
-    if sensor is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-
-    value_model = Values(**value_request.model_dump(), sensor_id=sensor_id)
-
-    db.add(value_model)
-    db.commit()
+# @router.post("/sensors/{sensor_id}", status_code=status.HTTP_201_CREATED)
+# async def post_value(request: Request, value_request: ValueRequest, sensor_id: int,
+#                      user: user_dependency, db: db_dependency):
+#     if user is None:
+#         raise HTTPException(status_code=401, detail="No User")
+#
+#     sensor = db.query(models.Sensors).filter(models.Sensors.id == sensor_id) \
+#         .filter(models.Sensors.owner_id == user.id).first()
+#
+#     if sensor is None:
+#         raise HTTPException(status_code=401, detail="No Sensor")
+#
+#     value_model = Values(**value_request.model_dump(), sensor_id=sensor_id)
+#
+#     db.add(value_model)
+#     db.commit()
 
 
 
