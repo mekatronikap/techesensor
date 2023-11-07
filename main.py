@@ -1,15 +1,15 @@
 from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel, Field
+from starlette import status
+from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-from sqlalchemy.orm import Session
 from routers import sensors, auth, values_api, auth_api
 from routers.auth import get_current_user
 import models
 from database import engine, SessionLocal
-from starlette import status
 
 
 app = FastAPI(docs_url=None, redoc_url=None)
@@ -36,7 +36,11 @@ class ValueRequest(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    user = await get_current_user(request)
+    if user:
+        return RedirectResponse(url="/sensors", status_code=status.HTTP_302_FOUND)
+
+    return templates.TemplateResponse("home.html", {"request": request, "user": user})
 
 
 app.include_router(sensors.router)

@@ -1,5 +1,7 @@
 import sys
 import json
+from typing import Annotated
+
 from fastapi import APIRouter, Request, Form, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
@@ -63,6 +65,7 @@ async def create_sensor(request: Request, db: Session = Depends(get_db), descrip
                         type: str = Form(...), site: str = Form(...),
                         equipment: str = Form(...), compartment: str = Form(...)):
     user = await get_current_user(request)
+    print(user)
     if user is None:
         return RedirectResponse(url="/auth", status_code=status.HTTP_302_FOUND)
 
@@ -72,7 +75,7 @@ async def create_sensor(request: Request, db: Session = Depends(get_db), descrip
     sensor_model.site = site
     sensor_model.equipment = equipment
     sensor_model.compartment = compartment
-    sensor_model.owner_id = user.get("id")
+    sensor_model.owner_id = user.get('id')
 
     db.add(sensor_model)
     db.commit()
@@ -152,8 +155,8 @@ async def edit_sensor_commit(request: Request, sensor_id: int, db: Session = Dep
                              description: str = Form(...),
                              type: str = Form(...), site: str = Form(...),
                              equipment: str = Form(...), compartment: str = Form(...)):
-    user = get_current_user(request)
-
+    user = await get_current_user(request)
+    print(user)
     sensor = await is_own_sensor(request, sensor_id, db)
     if sensor is None:
         return RedirectResponse(url="/sensors", status_code=status.HTTP_302_FOUND)
@@ -164,7 +167,7 @@ async def edit_sensor_commit(request: Request, sensor_id: int, db: Session = Dep
     sensor_model.site = site
     sensor_model.equipment = equipment
     sensor_model.compartment = compartment
-    sensor_model.owner_id = 1
+    sensor_model.owner_id = user.get('id')
 
     db.add(sensor_model)
     db.commit()
